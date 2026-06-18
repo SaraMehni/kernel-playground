@@ -55,3 +55,29 @@ It detects IPv4 packets sent to and from the localhost address (127.0.0.1) and p
 ```text
 Localhost Packet: 127.0.0.1 -> 127.0.0.1
 ```
+
+## Project Results
+
+The module was successfully compiled and loaded into the Linux kernel.
+
+The Netfilter hook detects IPv4 localhost packets (127.0.0.1) and prints their source and destination addresses using printk.
+
+The module was tested by generating localhost traffic with:
+
+```bash
+ping 127.0.0.1
+```
+
+The expected output was observed in the kernel log using:
+
+```bash
+dmesg
+```
+
+## Implementation Notes
+
+The project is implemented as a Linux kernel module using the Netfilter framework.
+
+The hook function checks whether both the source and destination IP addresses are 127.0.0.1.
+
+If a localhost packet is detected, the module logs the packet information and accepts the packet without modifying it.
