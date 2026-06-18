@@ -1,102 +1,158 @@
-# M5 - Localhost Traffic Monitor
+# M5 – Localhost Traffic Monitor
 
-This project implements a Linux kernel module that monitors localhost IPv4 traffic using the Netfilter framework.
+## Overview
 
-## Usage
+This project implements a Linux kernel module that monitors localhost network traffic using the Linux Netfilter framework.
 
-The directory contains a Makefile to build the module.
+The module detects both IPv4 (`127.0.0.1`) and IPv6 (`::1`) localhost packets. When a localhost packet is detected, the source and destination IP addresses are printed to the Linux kernel log using `printk()`.
 
-### Build
+---
+
+## Requirements
+
+- Linux operating system
+- GCC compiler
+- GNU Make
+- Linux kernel headers
+
+---
+
+## Project Structure
+
+```
+modules/
+├── monitor.c
+├── Makefile
+├── README.md
+└── images/
+    └── results.png
+```
+
+---
+
+## Build
+
+Compile the kernel module:
 
 ```bash
 make
 ```
 
-### Install
+---
+
+## Load the Module
+
+Load the module into the Linux kernel:
 
 ```bash
 sudo insmod monitor.ko
 ```
 
-### Test
+---
 
-```bash
-ping 127.0.0.1
-dmesg
-```
+## Test
 
-### Remove
-
-```bash
-sudo rmmod monitor
-```
-
-## Files
-
-- monitor.c : Linux kernel module source
-- Makefile : Build configuration
-- README.md : Project documentation
-
-## Author
-
-Sara Mehni
-
-Course: Software Networks
-
-Assignment: M5 - Localhost Traffic Monitor
-
-## Description
-
-This kernel module monitors localhost IPv4 traffic using the Netfilter framework.
-It detects IPv4 packets sent to and from the localhost address (127.0.0.1) and prints the source and destination IP addresses to the kernel log.
-
-### Example Output
-
-```text
-Localhost Packet: 127.0.0.1 -> 127.0.0.1
-```
-
-## Project Results
-
-The module was successfully compiled and loaded into the Linux kernel.
-
-The Netfilter hook detects IPv4 localhost packets (127.0.0.1) and prints their source and destination addresses using printk.
-
-The module was tested by generating localhost traffic with:
-
-```bash
-ping 127.0.0.1
-```
-
-The expected output was observed in the kernel log using:
-
-```bash
-dmesg
-```
-
-## Implementation Notes
-
-The project is implemented as a Linux kernel module using the Netfilter framework.
-
-The hook function checks whether both the source and destination IP addresses are 127.0.0.1.
-
-If a localhost packet is detected, the module logs the packet information and accepts the packet without modifying it.
-
-## Results
-
-The module was successfully compiled and loaded into the Linux kernel.
-
-After sending localhost traffic using:
+Generate IPv4 localhost traffic:
 
 ```bash
 ping 127.0.0.1 -c 3
 ```
 
-the kernel log displayed messages similar to:
+Generate IPv6 localhost traffic:
 
-```text
-Localhost Packet: 127.0.0.1 -> 127.0.0.1
+```bash
+ping6 ::1 -c 3
 ```
 
-This confirms that the module correctly detects IPv4 localhost traffic using the Netfilter framework.
+Display the kernel log:
 
+```bash
+dmesg | grep Localhost
+```
+
+---
+
+## Remove the Module
+
+Unload the module:
+
+```bash
+sudo rmmod monitor
+```
+
+---
+
+## Implementation
+
+The project is implemented as a Linux kernel module using the Linux Netfilter framework.
+
+Two Netfilter hooks are registered to inspect localhost traffic:
+
+- IPv4 localhost (`127.0.0.1`)
+- IPv6 localhost (`::1`)
+
+Whenever a matching packet is detected, the module logs the source and destination IP addresses using `printk()`. The packets are accepted without modification.
+
+The Netfilter hooks are unregistered when the module is removed.
+
+---
+
+## Example Output
+
+```text
+Localhost Monitor Loaded
+Localhost IPv4 Packet: 127.0.0.1 -> 127.0.0.1
+Localhost IPv6 Packet: ::1 -> ::1
+Localhost Monitor Unloaded
+```
+
+---
+
+## Results
+
+The module was successfully compiled, loaded, tested, and unloaded.
+
+The following functionality was verified:
+
+- Successful module compilation
+- Successful module loading
+- IPv4 localhost traffic detection (`127.0.0.1`)
+- IPv6 localhost traffic detection (`::1`)
+- Kernel log generation using `printk()`
+- Successful module unloading
+
+The kernel log confirms that the module correctly detects localhost traffic for both IPv4 and IPv6.
+
+---
+
+## Screenshot
+
+The following screenshot shows the successful execution of the project, including module loading, IPv4 and IPv6 localhost traffic detection, kernel log output, and module unloading.
+
+![Project Results](images/results.png)
+
+---
+
+## Files
+
+| File | Description |
+|------|-------------|
+| monitor.c | Linux kernel module implementation |
+| Makefile | Build configuration |
+| README.md | Project documentation |
+
+---
+
+## License
+
+This project is released under the GNU General Public License (GPL).
+
+---
+
+## Author
+
+**Sara Mehni**
+
+Course: Software Networks
+
+Assignment: M5 – Localhost Traffic Monitor
