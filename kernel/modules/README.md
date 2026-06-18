@@ -1,41 +1,46 @@
-# Custom Kernel Module for Networking Extension
+# M5 - Localhost Traffic Monitor
 
-This project demonstrates how to create a custom Linux kernel module designed to extend the kernel's networking capabilities by adding new features.
+This project implements a Linux kernel module that monitors localhost IPv4 traffic using the Netfilter framework.
 
-## Usage Instructions
+## Usage
 
-The directory contains a `Makefile` with predefined targets to manage the build and installation process:
+The directory contains a Makefile to build the module.
 
-### Targets
+### Build
 
-- **build**: Compile the kernel module. This will generate a `.ko` file that can be loaded into the kernel.
-  
-- **install**: Copy the compiled `.ko` module into the shared folder accessible within your VM. This shared folder is linked via a symbolic link named `shared` in the current directory, allowing easy access from the Guest OS running in the VM.
-  
-- **clean**: Remove all build artifacts, including the `.ko` file, to clean up the directory for a fresh build.
+```bash
+make
+```
 
-## How to Use
+### Install
 
-1. **Build the module**
+```bash
+sudo insmod monitor.ko
+```
 
-   ```bash
-   make build
-   ```
+### Test
 
-2. **Install the module**
+```bash
+ping 127.0.0.1
+dmesg
+```
 
-   ```bash
-   make install
-   ```
+### Remove
 
-3. **Clean build artifacts**
+```bash
+sudo rmmod monitor
+```
 
-   ```bash
-   make clean
-   ```
+## Files
 
-Ensure that your environment has the necessary kernel headers and build tools installed to successfully compile the module.
+- monitor.c : Linux kernel module source
+- Makefile : Build configuration
+- README.md : Project documentation
 
----
+## Author
 
-*Note:* The actual kernel module source code should be in the `linux` directory, and the `Makefile` is configured to compile it accordingly.
+Sara Mehni
+
+Course: Software Networks
+
+Assignment: M5 - Localhost Traffic Monitor
