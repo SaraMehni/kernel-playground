@@ -81,3 +81,22 @@ The project is implemented as a Linux kernel module using the Netfilter framewor
 The hook function checks whether both the source and destination IP addresses are 127.0.0.1.
 
 If a localhost packet is detected, the module logs the packet information and accepts the packet without modifying it.
+
+## Results
+
+The module was successfully compiled and loaded into the Linux kernel.
+
+After sending localhost traffic using:
+
+```bash
+ping 127.0.0.1 -c 3
+```
+
+the kernel log displayed messages similar to:
+
+```text
+Localhost Packet: 127.0.0.1 -> 127.0.0.1
+```
+
+This confirms that the module correctly detects IPv4 localhost traffic using the Netfilter framework.
+
